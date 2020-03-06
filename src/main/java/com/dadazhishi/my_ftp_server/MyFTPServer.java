@@ -1,5 +1,9 @@
 package com.dadazhishi.my_ftp_server;
 
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
@@ -11,15 +15,33 @@ import org.apache.ftpserver.usermanager.UserFactory;
 public class MyFTPServer {
 
   public static void main(String[] args) throws FtpException {
-    if (args.length != 4) {
-      System.err.println("usage: java -jar my-ftp-server-*.jar 21 username password dir");
-      System.exit(-1);
+    ArgumentParser parser = ArgumentParsers.newFor(MyFTPServer.class.getSimpleName()).build()
+        .defaultHelp(true)
+        .description("simple ftp server");
+    parser.addArgument("-P", "--port").setDefault(21)
+        .required(false)
+        .help("ftp port");
+    parser.addArgument("-u", "--user").setDefault("admin")
+        .required(false)
+        .help("username");
+    parser.addArgument("-p", "--password").setDefault("admin")
+        .required(false)
+        .help("password");
+    parser.addArgument("-d", "--dir")
+        .required(true)
+        .help("static file dir");
+    Namespace ns;
+    try {
+      ns = parser.parseArgs(args);
+    } catch (ArgumentParserException e) {
+      parser.handleError(e);
+      System.exit(1);
       return;
     }
-    int port = Integer.parseInt(args[0]);
-    String username = args[1];
-    String password = args[2];
-    String dir = args[3];
+    Integer port = ns.getInt("port");
+    String username = ns.getString("username");
+    String password = ns.getString("password");
+    String dir = ns.getString("dir");
 
     FtpServerFactory serverFactory = new FtpServerFactory();
     ListenerFactory factory = new ListenerFactory();
