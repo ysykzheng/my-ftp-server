@@ -15,7 +15,7 @@ import org.apache.ftpserver.usermanager.UserFactory;
 public class MyFTPServer {
 
   public static void main(String[] args) throws FtpException {
-    ArgumentParser parser = ArgumentParsers.newFor(MyFTPServer.class.getSimpleName()).build()
+    ArgumentParser parser = ArgumentParsers.newFor("java -jar my-ftp-server-*-jar-with-dependencies.jar").build()
         .defaultHelp(true)
         .description("simple ftp server");
     parser.addArgument("-P", "--port").setDefault(21)
