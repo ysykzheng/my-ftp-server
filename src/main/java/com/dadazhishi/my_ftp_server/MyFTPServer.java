@@ -11,14 +11,19 @@ import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.User;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.UserFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MyFTPServer {
+
+  private static final Logger log= LoggerFactory.getLogger(MyFTPServer.class);
 
   public static void main(String[] args) throws FtpException {
     ArgumentParser parser = ArgumentParsers.newFor("java -jar my-ftp-server-*-jar-with-dependencies.jar").build()
         .defaultHelp(true)
         .description("simple ftp server");
     parser.addArgument("-P", "--port").setDefault(21)
+        .type(Integer.class)
         .required(false)
         .help("ftp port");
     parser.addArgument("-u", "--user").setDefault("admin")
@@ -39,9 +44,10 @@ public class MyFTPServer {
       return;
     }
     Integer port = ns.getInt("port");
-    String username = ns.getString("username");
+    String username = ns.getString("user");
     String password = ns.getString("password");
     String dir = ns.getString("dir");
+    log.info("port={},username={},password={},dir={}",port,username,password,dir);
 
     FtpServerFactory serverFactory = new FtpServerFactory();
     ListenerFactory factory = new ListenerFactory();

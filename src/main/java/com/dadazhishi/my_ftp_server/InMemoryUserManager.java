@@ -18,10 +18,7 @@ public class InMemoryUserManager implements UserManager {
   private BaseUser user;
 
   public User getUserByName(String s) throws FtpException {
-    if (user.getName().equals(s)) {
-      return user;
-    }
-    return null;
+    return user;
   }
 
   public String[] getAllUserNames() throws FtpException {
@@ -47,7 +44,7 @@ public class InMemoryUserManager implements UserManager {
   }
 
   public User authenticate(Authentication auth) throws AuthenticationFailedException {
-    if(auth!=null && auth instanceof UsernamePasswordAuthentication){
+    if(auth instanceof UsernamePasswordAuthentication){
       UsernamePasswordAuthentication userAuth = (UsernamePasswordAuthentication) auth;
       if(user.getName().equals(userAuth.getUsername()) && user.getPassword().equals(userAuth.getPassword())){
         return user;
